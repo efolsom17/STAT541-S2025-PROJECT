@@ -1,0 +1,5 @@
+---
+title: Stat 541 Experimental Design Project 1
+author: "Ben Devries, Eric Folsom, Ryan Kardoes, Alex Trauner"
+format: pdf
+---
