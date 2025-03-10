@@ -3,3 +3,20 @@ title: Stat 541 Experimental Design Project 1
 author: "Ben Devries, Eric Folsom, Ryan Kardoes, Alex Trauner"
 format: pdf
 ---
+
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+pre_dat <- data.frame(pot = rep(c("small", "large"), each = 3),
+                      seconds = c(170, 162, 184, 112, 126, 119))
+sig <- pre_dat |> group_by(pot) |> summarise(s = sd(seconds)) |> pull()
+power.t.test(delta = 30, sd = sig[1], sig.level = 0.01, type = "two.sample",
+             power = 0.99, alternative = "one.sided")
+power.t.test(delta = 30, sd = sig[2], sig.level = 0.01, type = "two.sample",
+             power = 0.99, alternative = "one.sided")
+```
+
