@@ -8,6 +8,7 @@ format: pdf
 #| include: false
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(readxl)
 ```
 
 ```{r}
@@ -46,4 +47,13 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
     c.	Budget: Cost of salt + cost of electricity + cost of water + cost of human time 
 9.	Review and revise. After the experiment, steps could be revised to plan a better future experiment. 
 
+## Collected Data
 
+```{r}
+#| label: loading_Data
+
+BoilDat <- read_excel("STAT541-Project-Data.xlsx") |> mutate(
+    Treatment = as.factor(Treatment),
+    Burner = as.factor(`Burner/pot`)
+) |> select(-`Burner/pot`)
+```
