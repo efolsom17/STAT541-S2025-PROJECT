@@ -55,7 +55,7 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
 7.	Outline the analysis: 
     a.	Compare differences between salted and unsalted water for time until boiling. Determine differences (confidence intervals) in boiling time for each treatment, and determine which treatment is best (fastest/least time until boiling). 
 8.	Calculate number of observations and time/budget. 
-    a.	N: Based on the our pilot study, we will need to complete
+    a.	N: Based on the our pilot study, we will need to complete at least 3 replicates for each treatment. 
     b.	Time: Each pot will take ~3 minutes to boil.
     c.	Budget: Cost of salt + cost of electricity + cost of water + cost of human time 
 9.	Review and revise. After the experiment, steps could be revised to plan a better future experiment. 
