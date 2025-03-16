@@ -8,7 +8,6 @@ format: pdf
 #| include: false
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(readxl)
 ```
 
 ```{r}
@@ -21,33 +20,47 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
              power = 0.90, alternative = "one.sided")
 ```
 
-9-Step Checklist
+**9-Step Checklist**
 1.	Define the objectives: Compare boiling times of water with and without salt to determine which boils faster. 
-2.	Identify response and sources of variation. 
+2.	Identify response and sources of variation.  
     a.	Treatment factors and levels: One treatment factor (salt) with 2 levels: unsalted, salted. 
     b.	Response: Time until boiling, in seconds. True difference is defined as 30 seconds.
     c.	Sources of variation: Pot material, stove used, burner used, time to preheat burner, amount of water used, amount of salt used, order of boiling (pot temperature).
     d.	Blocking factor: Pot + burner combination
 3.	Choose a rule for assigning the experimental units to trt (design). 
-    a.	We would choose a randomized block design, where salt treatment would be randomized so that each pot/burner combination received multiple repetitions of salted vs. unsalted in a random order.
+    a.	We would choose a block design, where salt treatment would be randomized so that each pot/burner combination received multiple repetitions of salted vs. unsalted.
 4.	Specify measurements to be made, experimental procedure, and the anticipated difficulties. 
     a.	Measurements: Seconds until water is at a rolling boil (determined by one group member). 
-    b.	Procedure: After randomizing salted vs. unsalted treatments to each pot and burner combination, begin the experiment. Burners should be preheated for 5 minutes prior to placing pots on burners. 2 cups of water should be added to pots. Unsalted pots can be boiled as is, salted pots should have 2 tablespoons of salt added prior to placing on the burner. Time should start when the pot is placed on the burner. Time should be recorded when the pot is at a rolling boil. In between repetitions, pots should be placed into a cool water bath to return them to neutral temperature before boiling the next pot of water.
+    b.	Procedure: All unsalted pots will be boiled first, then salted pots, to avoid residual salt in pots and measuring cups that may contaminate unsalted pots. Burners and pots should be preheated to boiling, then the first pot should be dumped out once temp is equilibriated. 2 cups of water should be added to pots. Unsalted pots can be boiled as is, salted pots should have 2 tablespoons of salt added to water prior to adding to pot. Time should start when the pot is placed on the burner. Time should be recorded when the pot is at a rolling boil - determined by one group member to reduce subjectivity. 
     c.	Anticipated difficulties: Human subjectivity in identifying boiling point, ensuring pots and water are at same temp for different repetitions. 
 5.	Pilot experiment: Our pilot experiment yielded the following results:
-    a.	
+
+```{r}
+pre_dat <- data.frame(pot = rep(c("small", "large"), each = 3),
+                      seconds = c(170, 162, 184, 112, 126, 119))
+sig <- pre_dat |> group_by(pot) |> summarise(s = sd(seconds)) |> pull()
+pre_dat
+sig
+power.t.test(delta = 30, sd = sig[1], sig.level = 0.05, type = "two.sample",
+             power = 0.90, alternative = "one.sided")
+power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
+             power = 0.90, alternative = "one.sided")
+```
+
+    Therefore, we will use small pots in our experiment, as the SD was 7 seconds vs. 11.14 seconds for large pots, indicating less variability in small pots.
+
 6.	Specify the model: 
-    a.	Seconds to boiling = constant + effect of salt + effect of burner and pot block + error 
-    b.	Yijt = µ + αi + βj +εijt
+    a.	Seconds to boiling = constant + effect of salt + effect of burner block + error 
+    b.	$Y_{ijt}$ = $\mu$ + $\alpha_i$ + $\beta_j$ + $epsilon_{ijt}$
 7.	Outline the analysis: 
     a.	Compare differences between salted and unsalted water for time until boiling. Determine differences (confidence intervals) in boiling time for each treatment, and determine which treatment is best (fastest/least time until boiling). 
 8.	Calculate number of observations and time/budget. 
     a.	N: Based on the our pilot study, we will need to complete
-    b.	Time: Each pot will take 
+    b.	Time: Each pot will take ~3 minutes to boil.
     c.	Budget: Cost of salt + cost of electricity + cost of water + cost of human time 
 9.	Review and revise. After the experiment, steps could be revised to plan a better future experiment. 
 
-## Collected Data
+**Collected Data**
 
 ```{r}
 #| label: loading_Data
