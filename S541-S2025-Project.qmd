@@ -8,6 +8,8 @@ format: pdf
 #| include: false
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(purrr)
+library(emmeans)
 ```
 
 ```{r}
@@ -65,8 +67,18 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
 ```{r}
 #| label: loading_Data
 
-BoilDat <- read_excel("STAT541-Project-Data.xlsx") |> mutate(
+BoilDat <- readxl::read_excel("STAT541-Project-Data.xlsx") |> mutate(
     Treatment = as.factor(Treatment),
     Burner = as.factor(`Burner/pot`)
 ) |> select(-`Burner/pot`)
+
+fit.Boil <- lm(`Boiling Time` ~ 0+., data = BoilDat)
+summary(fit.Boil)
+anova(fit.Boil)
+
+emm.Boil <- emmeans(fit.Boil, ~ Treatment, adjust = "tukey")
+pairs(emm.Boil, specs = "Treatment")
+
+emm.Boil_ByBurn <- emmeans(fit.Boil, ~ Treatment | Burner)
+pairs(emm.Boil_ByBurn, specs = "Treatment")
 ```
