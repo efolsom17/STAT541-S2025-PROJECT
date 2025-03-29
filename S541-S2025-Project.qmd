@@ -103,7 +103,11 @@ pairs(emm.Boil_ByBurn, specs = "Treatment")
 ```
 
 **Results**
-The results indicate that there is no main effect of treatment (salted vs. fresh), nor was there an effect of burner. Based on the results of the ANOVA, there is very weak evidence against the null hypothesis that there is no difference between boiling times for salted and unsalted water (F_{1,21}, p-value=0.7801). 
+The results indicate that there is no main effect of treatment (salted vs. fresh), nor was there an effect of burner. Based on the results of the ANOVA, there is very weak evidence against the null hypothesis that there is no difference between boiling times for salted and unsalted water (F_{1,21}, p-value=0.7801). The 95% confidence interval for the difference in true mean boiling times in seconds for salted vs.
+unsalted water was found to be (-19.17968, 25.21802).
 
 **Conclusions and Changes for Future Experiments**
 If we were to repeat this experiment, here are some things we might change to improve our design and outcomes:
+Repetitions - Greater repetition would give us more power to detect a difference. While the pilot study indicated 3 repetitions was enough power, the pilot study did not take salted vs. unsalted water into account.
+Salt mixing methods - We added salt to the measuring cup before dumping water into the pots. If repeating this experiment, it may be more accurate to add salt to the water after it is dumped in the pot. We seemed to have a lot of residual salt that was staying in the measuring cups/not fully emptying into the pot.
+Boiling time determination - We used one group member to determine boiling time (visually at a rolling boil). The experiment would be more accurate if multiple thermometers were used to determine boiling point at 100 C. 
