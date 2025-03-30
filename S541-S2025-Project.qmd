@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(purrr)
 library(emmeans)
+library(ggfortify)
+theme_set(theme_bw())
 ```
 
 
@@ -26,17 +28,34 @@ The following lists our proposed experimental design to answer our research ques
 2.	Identify response and sources of variation.  
     a.	Treatment factors and levels: One treatment factor (salt) with 2 levels: unsalted, salted. 
     b.	Response: Time until boiling, in seconds. True difference is defined as 30 seconds.
-    c.	Sources of variation: Pot material, stove used, burner used, time to preheat burner, amount of water used, amount of salt used, order of boiling (pot temperature).
-    d.	Blocking factor: Pot + burner combination
-3.	Choose a rule for assigning the experimental units to trt (design). 
-    a.	We would choose a complete block design, where each pot/burner combination received multiple repetitions of salted vs. unsalted.
-4.	Specify measurements to be made, experimental procedure, and the anticipated difficulties. 
-    a.	Measurements: Seconds until water is at a rolling boil (determined by one group member, timed by phone timer to the nearest 1/100th of a second). 
-    b.	Procedure: All unsalted pots will be boiled first, then salted pots, to avoid residual salt in pots and measuring cups that may contaminate unsalted pots. Burners and pots should be preheated to boiling, then the first pot should be dumped out once temp is equilibriated. 2 cups of water should be added to pots. Unsalted pots can be boiled as is, salted pots should have 2 tablespoons of salt added to water prior to adding to pot. Time should start when the pot is placed on the burner. Time should be recorded when the pot is at a rolling boil - determined by one group member to reduce subjectivity. 
-    c.	Anticipated difficulties: Human subjectivity in identifying boiling point, ensuring pots and water are at same temp for different repetitions. 
-5.	Pilot experiment: We completed a pilot experiment to determine which size pot (small or large) would have less variability and therefore give us more power in determining boiling time differences. To complete this pilot study small and large pots were brought to boil with 2 cups of water. The first rep was dumped out to equilibriate temperature, then the 3 following repetitions were recorded for boiling time in seconds.
 
-Our pilot experiment yielded the following results:
+    c.	Sources of variation: Pot material, stove used, burner used, time to preheat burner, amount of water used, amount of salt used, order of boiling (pot temperature).
+
+    d.	Blocking factor: Pot + burner combination
+
+3.	Choose a rule for assigning the experimental units to trt (design). 
+
+    a.	We would choose a complete block design, where each pot/burner combination received multiple repetitions of salted vs. unsalted.
+
+4.	Specify measurements to be made, experimental procedure, and the anticipated difficulties. 
+
+    a.	Measurements: 
+    
+        Seconds until water is at a rolling boil (determined by one group member, timed by phone timer to the nearest 1/100th of a second).
+
+    b.	Procedure: 
+    
+        All unsalted pots will be boiled first, then salted pots, to avoid residual salt in pots and measuring cups that may contaminate unsalted pots. Burners and pots should be preheated to boiling, then the first pot should be dumped out once temp is equilibriated. 2 cups of water should be added to pots. Unsalted pots can be boiled as is, salted pots should have 2 tablespoons of salt added to water prior to adding to pot. Time should start when the pot is placed on the burner. Time should be recorded when the pot is at a rolling boil - determined by one group member to reduce subjectivity.
+
+    c.	Anticipated difficulties:
+    
+        Human subjectivity in identifying boiling point, ensuring pots and water are at same temp for different repetitions. Differences in ambient temperature due to heat from stovetop burners.
+
+5.	Pilot experiment: 
+
+    We completed a pilot experiment to determine which size pot (small or large) would have less variability and therefore give us more power in determining boiling time differences. To complete this pilot study small and large pots were brought to boil with 2 cups of water. The first rep was dumped out to equilibriate temperature, then the 3 following repetitions were recorded for boiling time in seconds.
+
+    Our pilot experiment yielded the following results:
 
 ```{r}
 pre_dat <- data.frame(pot = rep(c("small", "large"), each = 3),
@@ -53,19 +72,33 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
 Therefore, we will use small pots in our experiment, as the SD was 7 seconds for small pots vs. 11.14 seconds for large pots, indicating less variability in small pots.
 
 6.	Specify the model: 
+
     a.	Seconds to boiling = constant + effect of salt + effect of burner block + error 
-    b.	$Y_{ijt}$ = $\mu$ + $\alpha_i$ + $\beta_j$ + $epsilon_{ijt}$
+
+    b.	$Y_{ijt} = \mu + \alpha_i + \beta_j + \epsilon_{ijt}$
+
         Where:
+
           $Y_{ijt}$ is the response (boiling time in seconds)
+
           $\mu$ is a constant
+
           $\alpha_i$ is main effect of treatment (salted vs. unsalted)
+
           $\beta_j$ is main effect of block (burner)
-          $epsilon_{ijt}$ is the error term
-7.	Outline the analysis: 
-    a.	Compare differences between salted and unsalted water for time until boiling. Determine differences (confidence intervals) in boiling time for each treatment, and determine which treatment is best (fastest/least time until boiling). 
+
+          $\epsilon_{ijt}$ is the error term
+
+7.	Outline the analysis:
+
+    a.	Compare differences between salted and unsalted water for time until boiling. Determine differences (confidence intervals) in boiling time for each treatment, and determine which treatment is best (fastest/least time until boiling).
+
 8.	Calculate number of observations and time/budget. 
+
     a.	N: Based on the our pilot study, we will need to complete at least 3 replicates for each treatment. 
+
     b.	Time: Each pot will take ~3 minutes to boil.
+
     c.	Budget: Cost of salt + cost of electricity + cost of water + cost of human time 
 9.	Review and revise. After the experiment, steps could be revised to plan a better future experiment. Step 9 is further expanded upon in the results section.
 
@@ -83,14 +116,15 @@ BoilDat <- readxl::read_excel("STAT541-Project-Data.xlsx") |> mutate(
     Treatment = as.factor(Treatment),
     Burner = as.factor(`Burner/pot`)
 ) |> select(-`Burner/pot`)
-BoilDat
+BoilDat |> split(BoilDat$Treatment) |> map(knitr::kable)
 
 #Fit model with main effects of treatment and burner
 fit.Boil <- lm(`Boiling Time` ~ ., data = BoilDat)
 summary(fit.Boil)
 #Plots to check assumptions - linearity, normality, constant variance, influential observations
-par(mfrow=c(2,2))
-plot(fit.Boil)
+autoplot(fit.Boil, which=1:2)
+autoplot(fit.Boil, which=3:4)
+autoplot(fit.Boil, which=5:6)
 
 #ANOVA and Confidence Intervals
 anova(fit.Boil)
@@ -112,6 +146,9 @@ unsalted water was found to be (-19.17968, 25.21802).
 # Conclusions and Potential Modifications for Future Research
 
 If we were to repeat this experiment, here are some things we might change to improve our design and outcomes:
+
 Repetitions - Greater repetition would give us more power to detect a difference. While the pilot study indicated 3 repetitions was enough power, the pilot study did not take salted vs. unsalted water into account.
+
 Salt mixing methods - We added salt to the measuring cup before dumping water into the pots. If repeating this experiment, it may be more accurate to add salt to the water after it is dumped in the pot. We seemed to have a lot of residual salt that was staying in the measuring cups/not fully emptying into the pot.
+
 Boiling time determination - We used one group member to determine boiling time (visually at a rolling boil). The experiment would be more accurate if multiple thermometers were used to determine boiling point at 100 C. 
