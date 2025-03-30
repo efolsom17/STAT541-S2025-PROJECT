@@ -12,18 +12,16 @@ library(purrr)
 library(emmeans)
 ```
 
-**Pilot Study Data and Power Analysis**
-```{r}
-pre_dat <- data.frame(pot = rep(c("small", "large"), each = 3),
-                      seconds = c(170, 162, 184, 112, 126, 119))
-sig <- pre_dat |> group_by(pot) |> summarise(s = sd(seconds)) |> pull()
-power.t.test(delta = 30, sd = sig[1], sig.level = 0.05, type = "two.sample",
-             power = 0.90, alternative = "one.sided")
-power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
-             power = 0.90, alternative = "one.sided")
-```
 
-**9-Step Checklist**
+# INTRODUCTION
+
+For this project, we aim to explore the effect of adding salt to water on the time it takes to boil the water. We will be utilizing a randomized complete block design to perform our analysis. The following write-up details the experimental procedure, including a discussion of variables and the results of a pilot study.
+
+
+# Experimental Design
+
+The following lists our proposed experimental design to answer our research question. Please note that the "Pilot Study" step both holds discussion for the study itself, and the results of the pilot.
+
 1.	Define the objectives: The objective of this experiment was to compare boiling times of water with and without salt to determine which boils faster. 
 2.	Identify response and sources of variation.  
     a.	Treatment factors and levels: One treatment factor (salt) with 2 levels: unsalted, salted. 
@@ -52,7 +50,7 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
              power = 0.90, alternative = "one.sided")
 ```
 
-    Therefore, we will use small pots in our experiment, as the SD was 7 seconds for small pots vs. 11.14 seconds for large pots, indicating less variability in small pots.
+Therefore, we will use small pots in our experiment, as the SD was 7 seconds for small pots vs. 11.14 seconds for large pots, indicating less variability in small pots.
 
 6.	Specify the model: 
     a.	Seconds to boiling = constant + effect of salt + effect of burner block + error 
@@ -69,7 +67,11 @@ power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
     a.	N: Based on the our pilot study, we will need to complete at least 3 replicates for each treatment. 
     b.	Time: Each pot will take ~3 minutes to boil.
     c.	Budget: Cost of salt + cost of electricity + cost of water + cost of human time 
-9.	Review and revise. After the experiment, steps could be revised to plan a better future experiment. 
+9.	Review and revise. After the experiment, steps could be revised to plan a better future experiment. Step 9 is further expanded upon in the results section.
+
+# DATA ANALYSIS
+
+Our data was collected and stored within the "STAT541-Project-Data.xlsx" file attached with this report. The following code chunk details the exact analysis steps that were taken, including the reading of the data, fitting a linear model with the lm() function, performing an ANOVA analysis, and generating pairs of contrasts to answer our research question.
 
 **Collected Data**
 
@@ -102,11 +104,13 @@ emm.Boil_ByBurn <- emmeans(fit.Boil, ~ Treatment | Burner)
 pairs(emm.Boil_ByBurn, specs = "Treatment")
 ```
 
-**Results**
+# RESULTS
+
 The results indicate that there is no main effect of treatment (salted vs. fresh), nor was there an effect of burner. Based on the results of the ANOVA, there is very weak evidence against the null hypothesis that there is no difference between boiling times for salted and unsalted water (F_{1,21}, p-value=0.7801). The 95% confidence interval for the difference in true mean boiling times in seconds for salted vs.
 unsalted water was found to be (-19.17968, 25.21802).
 
-**Conclusions and Changes for Future Experiments**
+# Conclusions and Potential Modifications for Future Research
+
 If we were to repeat this experiment, here are some things we might change to improve our design and outcomes:
 Repetitions - Greater repetition would give us more power to detect a difference. While the pilot study indicated 3 repetitions was enough power, the pilot study did not take salted vs. unsalted water into account.
 Salt mixing methods - We added salt to the measuring cup before dumping water into the pots. If repeating this experiment, it may be more accurate to add salt to the water after it is dumped in the pot. We seemed to have a lot of residual salt that was staying in the measuring cups/not fully emptying into the pot.
