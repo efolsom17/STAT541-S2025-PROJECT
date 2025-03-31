@@ -64,9 +64,9 @@ sig <- pre_dat |> group_by(pot) |> summarise(s = sd(seconds)) |> pull()
 pre_dat
 sig
 power.t.test(delta = 30, sd = sig[1], sig.level = 0.05, type = "two.sample",
-             power = 0.90, alternative = "one.sided")
+             power = 0.90, alternative = "two.sided")
 power.t.test(delta = 30, sd = sig[2], sig.level = 0.05, type = "two.sample",
-             power = 0.90, alternative = "one.sided")
+             power = 0.90, alternative = "two.sided")
 ```
 
 Therefore, we will use small pots in our experiment, as the SD was 7 seconds for small pots vs. 11.14 seconds for large pots, indicating less variability in small pots.
@@ -140,7 +140,7 @@ pairs(emm.Boil_ByBurn, specs = "Treatment")
 
 # RESULTS
 
-The results indicate that there is no main effect of treatment (salted vs. fresh), nor was there an effect of burner. Based on the results of the ANOVA, there is very weak evidence against the null hypothesis that there is no difference between boiling times for salted and unsalted water (F_{1,21}, p-value=0.7801). The 95% confidence interval for the difference in true mean boiling times in seconds for salted vs.
+The results indicate that there is no main effect of treatment (salted vs. fresh), nor was there an effect of burner. The results from our ANOVA provide little to no evidence against the null hypothesis that there is no difference between boiling times for salted and unsalted water ($F_{1,21}=0.0800$, p-value=0.7801). The 95% confidence interval for the difference in true mean boiling times in seconds for salted vs.
 unsalted water was found to be (-19.17968, 25.21802).
 
 # Conclusions and Potential Modifications for Future Research
@@ -151,4 +151,4 @@ Repetitions - Greater repetition would give us more power to detect a difference
 
 Salt mixing methods - We added salt to the measuring cup before dumping water into the pots. If repeating this experiment, it may be more accurate to add salt to the water after it is dumped in the pot. We seemed to have a lot of residual salt that was staying in the measuring cups/not fully emptying into the pot.
 
-Boiling time determination - We used one group member to determine boiling time (visually at a rolling boil). The experiment would be more accurate if multiple thermometers were used to determine boiling point at 100 C. 
+Boiling time determination - We used one group member to determine boiling time (visually at a rolling boil). The experiment would be more accurate if multiple thermometers were used to determine boiling point at $100^{\circ}\ C$. 
