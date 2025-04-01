@@ -121,7 +121,8 @@ BoilDat |> split(BoilDat$Treatment) |> map(knitr::kable)
 #Fit model with main effects of treatment and burner
 fit.Boil <- lm(`Boiling Time` ~ ., data = BoilDat)
 summary(fit.Boil)
-#Plots to check assumptions - linearity, normality, constant variance, influential observations
+#Plots to check assumptions - linearity, normality,
+#constant variance, influential observations
 autoplot(fit.Boil, which=1:2)
 autoplot(fit.Boil, which=3:4)
 autoplot(fit.Boil, which=5:6)
