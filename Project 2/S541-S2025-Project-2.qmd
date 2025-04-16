@@ -1,0 +1,32 @@
+---
+title: Stat 541 Experimental Design Project 2
+author: "Ben DeVries, Eric Folsom, Ryan Kardoes, Alex Trauner"
+format: pdf
+---
+
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+library(emmeans)
+library(ggfortify)
+theme_set(theme_bw())
+```
+
+# LEVEL 1 Header
+
+## LEVEL 2 Header
+
+### LEVEL 3 Header
+
+#### LEVEL 4 Header
+
+1. List Item 1
+   1. Sublist item 1
+      1. sub-sublist item 1
+2. List Item 2
+3. List Item 3
+
+- Unordered list item
+  - unordered sub-list item
