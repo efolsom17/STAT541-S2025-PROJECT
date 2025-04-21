@@ -59,6 +59,19 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
 5.	Pilot experiment: 
 
 6.	Specify the model: 
+$Y_{ijt}$ = \mu + \alpha_i + \beta_j + \epsilon_{ijt}$
+
+        Where:
+
+          $Y_{ijt}$ is the response (cortisol, PGE2, SOD, or fecal IgA)
+
+          $\mu$ is a constant
+
+          $\alpha_i$ is main effect of treatment (CON, LOW, HIGH postbiotic supplementation)
+
+          $\beta_j$ is main effect of block (sex)
+
+          $\epsilon_{ijt}$ is the error term
 
 7.	Outline the analysis:
 
