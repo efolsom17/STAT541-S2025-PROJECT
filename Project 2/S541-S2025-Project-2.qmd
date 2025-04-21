@@ -30,3 +30,38 @@ theme_set(theme_bw())
 
 - Unordered list item
   - unordered sub-list item
+
+# Part 1: Experimental Design Plan (9-step checklist)
+
+1.	Define the objectives: 
+    1. The objective of this experiment was to compare how three levels of postbiotic supplementation may attenuate stress, inflammation, and indicators of leaky gut in young horses undergoing an exercise challenge.
+
+2.	Identify response and sources of variation.  
+    1.	Treatment factors and levels: One treatment factor (postbiotic supplementation) with 3 levels: 0 mg/kg BW, 46 mg/kg BW, and 92 mg/kg BW. 
+    2.	Response: Multiple response factors measured, including serum cortisol, PGE2, SOD, and fecal IgA. Repeated measures over time surrounding the SET (submaximal exercise test): PRE (before exercise), h0 (immediately post), h1, h6 post-exercise.
+    3.	Sources of variation: Individual horse, consumption of full amount of supplement, baseline stress/inflammation levels.
+    4.	Blocking factor: Sex
+
+3.	Choose a rule for assigning the experimental units to trt (design). 
+    1.	We would choose a randomized complete block design.
+
+4.	Specify measurements to be made, experimental procedure, and the anticipated difficulties. 
+    1.	Measurements: 
+        1. Serum cortisol, PGE2, SOD (measured by commercially available ELISA kit).
+        2. Fecal IgA (measured by commercially available ELISA kit).
+    2.	Procedure:  30 quarter horse yearlings were be stratified by age, body weight, and sex and assigned to one of three treatment groups: a control, not receiving any postbiotic, a low dose group receiving 46 mg/kg of the Diamond V TruEquineC postbiotic, and a high dose group receiving 92 mg/kg postbiotic product, which was top-dressed on concentrate fed two times daily. Horses also had ad lib (free-choice) access to water and hay. Horses underwent progressive exercise training for 30 minutes a day, 5 days a week to simulate industry standard sales preparation protocols. At the end of the study, a submaximal exercise test, or SET, was used to simulate a prolonged intense exercise bout. Horses were balanced by treatment and assigned to one of 4 SET groups which started exercise on 4 consecutive days, with one group per day.
+Horses arrived at day - 30 to adapt to the new location. At day - 14, baseline samples were collected and at day - 7, basal diet adaptation began. Day 0 marks initiation of experimental treatments via postbiotic supplementation. Sample collection occured at days -14, 0, 11, 45, and pre- and post-SET. Post-SET samples were taken at 0 h post, 1 hour, 6 hours, and 24 hours post exercise. FOr the purposes of this project, we will focus on samples surrounding the SET.
+To evaluate stress and inflammation, serum samples will be analyzed by ELISA for cortisol, prostaglandin E2 (PGE2), and superoxide dismutase (SOD). Fecal samples will be analyzed by ELISA for fecal IgA. Altogether, these markers allow for evaluation of inflammatory responses to stress events and gut dysfunction. Samples will be numerically coded and processed randomly to prevent any bias from researchers.
+    3.	Anticipated difficulties:
+        1. Working with animals - sometimes dangerous to obtain samples, leading to missing observations for some animals. Injuries/lameness can prevent animals from participating in exercise. Animals may not always eat the entirety of their diet, leading to differences in supplement dosing. 
+        2. Lab work - Difficulty in troubleshooting and optimizing kits, sample preservation and degradation, human error in lab techniques, environmental conditions in lab.
+
+5.	Pilot experiment: 
+
+6.	Specify the model: 
+
+7.	Outline the analysis:
+
+8.	Calculate number of observations and time/budget. 
+
+9.	Review and revise. 
