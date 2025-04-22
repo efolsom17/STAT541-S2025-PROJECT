@@ -60,6 +60,7 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
 5.	Pilot experiment: 
      1. Will need to run power analysis here..... could use one of the markers I have results on and just run with that for "Pilot Study". Actual power analysis was based off of joint markers for a different manuscript from this study. 
 
+Power test for approximate delta of serum cortisol found to be significantly different in a similar study, SD from current cortisol samples.
 power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample",
              power = 0.90, alternative = "two.sided")
 
