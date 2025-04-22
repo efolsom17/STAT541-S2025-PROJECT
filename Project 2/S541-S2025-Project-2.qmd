@@ -61,7 +61,7 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
      1. Will need to run power analysis here..... could use one of the markers I have results on and just run with that for "Pilot Study". Actual power analysis was based off of joint markers for a different manuscript from this study. 
 
 6.	Specify the model: 
-$Y_{ijt}$ = \mu + \alpha_i + \beta_j + T_h(i) \epsilon_{ijt}$
+$Y_{ijht}$ = \mu + \alpha_i + \beta_j + T_h(i) \epsilon_{ijht}$
 
         Where:
 
@@ -73,9 +73,9 @@ $Y_{ijt}$ = \mu + \alpha_i + \beta_j + T_h(i) \epsilon_{ijt}$
 
           $\beta_j$ is main effect of block (sex)
 
-          $T_h$ is random effect of horse within treatment
+          $T_{h(i)}$ is random effect of horse within treatment
 
-          $\epsilon_{ijt}$ is the error term
+          $\epsilon_{ijht}$ is the error term
 
 7.	Outline the analysis:
      1. Results will be analyzed using ANOVA for mixed effects models with repeated measures of time.
