@@ -49,17 +49,19 @@ theme_set(theme_bw())
     1.	Measurements: 
         1. Serum cortisol, PGE2, SOD (measured by commercially available ELISA kit).
         2. Fecal IgA (measured by commercially available ELISA kit).
-    2.	Procedure:  30 quarter horse yearlings were be stratified by age, body weight, and sex and assigned to one of three treatment groups: a control, not receiving any postbiotic, a low dose group receiving 46 mg/kg of the Diamond V TruEquineC postbiotic, and a high dose group receiving 92 mg/kg postbiotic product, which was top-dressed on concentrate fed two times daily. Horses also had ad lib (free-choice) access to water and hay. Horses underwent progressive exercise training for 30 minutes a day, 5 days a week to simulate industry standard sales preparation protocols. At the end of the study, a submaximal exercise test, or SET, was used to simulate a prolonged intense exercise bout. Horses were balanced by treatment and assigned to one of 4 SET groups which started exercise on 4 consecutive days, with one group per day.
-Horses arrived at day - 30 to adapt to the new location. At day - 14, baseline samples were collected and at day - 7, basal diet adaptation began. Day 0 marks initiation of experimental treatments via postbiotic supplementation. Sample collection occured at days -14, 0, 11, 45, and pre- and post-SET. Post-SET samples were taken at 0 h post, 1 hour, 6 hours, and 24 hours post exercise. FOr the purposes of this project, we will focus on samples surrounding the SET.
+    2.	Procedure:  30 quarter horse yearlings were be stratified by age, body weight, and sex and assigned to one of three treatment groups: a control, not receiving any postbiotic, a low dose group receiving 46 mg/kg of the postbiotic, and a high dose group receiving 92 mg/kg postbiotic product, which was top-dressed on concentrate fed two times daily. Horses also had ad lib (free-choice) access to water and hay. Horses underwent progressive exercise training for 30 minutes a day, 5 days a week to simulate industry-standard sales preparation protocols. At the end of the study, a submaximal exercise test, or SET, was used to simulate a prolonged intense exercise bout. Horses were balanced by treatment and assigned to one of 4 SET groups which started exercise on 4 consecutive days, with one group per day.
+Horses arrived at day - 30 to adapt to the new location. At day - 14, baseline samples were collected and at day - 7, basal diet adaptation began. Day 0 marks initiation of experimental treatments via postbiotic supplementation. Sample collection occured at days -14, 0, 11, 45, and pre- and post-SET. Post-SET samples were taken at 0 h post, 1 hour, 6 hours, and 24 hours post exercise. For the purposes of this project, we will focus on samples surrounding the SET.
 To evaluate stress and inflammation, serum samples will be analyzed by ELISA for cortisol, prostaglandin E2 (PGE2), and superoxide dismutase (SOD). Fecal samples will be analyzed by ELISA for fecal IgA. Altogether, these markers allow for evaluation of inflammatory responses to stress events and gut dysfunction. Samples will be numerically coded and processed randomly to prevent any bias from researchers.
     3.	Anticipated difficulties:
-        1. Working with animals - sometimes dangerous to obtain samples, leading to missing observations for some animals. Injuries/lameness can prevent animals from participating in exercise. Animals may not always eat the entirety of their diet, leading to differences in supplement dosing. 
+        1. Working with animals - Sometimes dangerous to obtain samples, leading to missing observations for some animals. Injuries/lameness can prevent animals from participating in exercise. Animals may not always eat the entirety of their diet, leading to differences in supplement dosing - monitored by collecting and weighing refusals. Individual differences in levels of stress and inflammation in any given animal.
         2. Lab work - Difficulty in troubleshooting and optimizing kits, sample preservation and degradation, human error in lab techniques, environmental conditions in lab.
+        3. Equipment - For this particular study, there were issues with the hot walker (how we exercise the horses) that prevented the SET from being as intense as it should have been to illicit a true stress response.
 
 5.	Pilot experiment: 
+     1. Will need to run power analysis here..... could use one of the markers I have results on and just run with that for "Pilot Study". Actual power analysis was based off of joint markers for a different manuscript from this study. 
 
 6.	Specify the model: 
-$Y_{ijt}$ = \mu + \alpha_i + \beta_j + \epsilon_{ijt}$
+$Y_{ijt}$ = \mu + \alpha_i + \beta_j + T_h(i) \epsilon_{ijt}$
 
         Where:
 
@@ -71,10 +73,38 @@ $Y_{ijt}$ = \mu + \alpha_i + \beta_j + \epsilon_{ijt}$
 
           $\beta_j$ is main effect of block (sex)
 
+          $T_h$ is random effect of horse within treatment
+
           $\epsilon_{ijt}$ is the error term
 
 7.	Outline the analysis:
+     1. Results will be analyzed using ANOVA for mixed effects models with repeated measures of time.
 
 8.	Calculate number of observations and time/budget. 
+     1. 30 horses were used for this study (n = 10 per trt).
+     2. The study was completed over a span of 69 days in Fall of 2022.
 
 9.	Review and revise. 
+
+
+# Part 2: Report
+
+## Introduction
+A healthy intestinal barrier helps aid in nutrient absorption and immune defense to pathogens in the gut. When this barrier becomes compromised by things such as illness or stress, pathogens can enter the bloodstream via gaps in cell junctions. This condition is most commonly known as “leaky gut”. This leaky gut can challenge the immune system and lead to weight loss, decreased performance, and other health complications for horses. Dietary supplementation with postbiotics may be used to support proper gut function and overall health, as well as mitigating stress responses. Postbiotics are beneficial byproducts that are created as a result of probiotic activity. Supplementing directly with postbiotics can support normal intestinal barrier integrity and decrease stress responses. Little is known about the response of young horses to supplementation with postbiotics when faced with exercise stress, therefore the objective of this study was to investigate the use of dietary Saccharomyces cerevisiae fermentation product  in mitigating the impacts of training and exercise on intestinal integrity and stress in the young performance horse.
+
+## Experimental units and randomization
+Thirty Quarter Horse yearlings (374 ± 25 kg BW; 562 ± 16 d of age; 15 fillies and 15 geldings) were used for this study.
+Treatment allocations (n = 10 per treatment) were fixed, while experimental units were assigned random numbers and stratified within treatment groups until optimally balanced groups were created. Horses were stratified by BW, age, and sex and randomly assigned to one of three dietary treatments (n = 10/treatment): CON (0), LOW (46), or HIGH (92 mg/kg BW SCFP).
+Blood and fecal samples will be obtained at pre-determined time points surrounding the SET and analyzed by ELISA for biological markers indicating stress and inflammation in response to an exercise challenge.
+
+## Pilot study and sample size calculations
+Summarize what you learned from your pilot study. Include sample size calculations - specify and defend your assumptions and choices. It is okay if you cannot achieve the desired sample as long as you justify why.
+
+## Data overview
+Describe your data and present figure(s) to illustrate the response.
+
+## Data analysis and results
+Describe your statistical methods, check assumptions and interpret your results.
+
+## Discussion
+Provide a written discussion about the take-away points from your study. Feel free to include commentary about any lessons you learned through this process.
