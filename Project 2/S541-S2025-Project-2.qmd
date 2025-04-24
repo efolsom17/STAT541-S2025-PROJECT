@@ -14,6 +14,10 @@ library(purrr)
 library(emmeans)
 library(ggfortify)
 library(lme4)
+library(ggResidpanel)
+library(effects)
+library(ggpubr)
+library(grid)
 theme_set(theme_bw())
 ```
 
@@ -67,7 +71,7 @@ Power test for approximate delta of serum cortisol found to be significantly dif
 Sample Size: `round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")` =  `r round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")$n)`
 
 6.	Specify the model: 
-$Y_{ijht}$ = \mu + \alpha_i + \beta_j + T_h(i) \epsilon_{ijht}$
+$Y_{ijht} = \mu + \alpha_i + \beta_j + T_{h(i)} + \epsilon_{ijht}$
 
         Where:
 
@@ -108,6 +112,9 @@ Summarize what you learned from your pilot study. Include sample size calculatio
 
 ## Data overview
 Describe your data and present figure(s) to illustrate the response.
+
+For our analysis of the effects of postbiotic treatments on prostaglandin E2 levels in quarterly horse yearlings, we will control for time and sex while accounting for repeated measures on the horses. @fig-eda displays a panel of plots used to visualize the response against the predictors, and explore the potential for interactions between our covariates. The violin plots in (A) suggest the treatment may have some effect as the observed PEG2 tends to be higher for horse with a larger postbiotic supplement. The violin plots in (B) appear nearly identical, providing little to no evidence for a sex effect. In plot (C), we explore the potential for changing PEG2 over time. There is no clear discernible trend, but there appears to be slightly less variation in PEG2 prior to applying treatments. This may suggest a potential treatment effect, as PEG2 measurements were more similar, prior to applying treatments. In plot (D), we see PEG2 measurements for geldings were slightly higher on average then fillies in the control and low probiotic treatments; but the reverse is true for the high treatment group. This hints at a potential interaction, but it's quite possible that patterns may be due to random chance. Both plots (E) and (F) show slightly different patterns in PEG2 measurements over time by treatment and sex respectively. These variations are slight and provide little to no evidence of interactions.
+
 ```{r}
 #| label: loading and visualizing data
 #| echo: false
@@ -118,42 +125,128 @@ Describe your data and present figure(s) to illustrate the response.
 
 HorseDat <- readxl::read_xlsx("Project 2 Data.xlsx") |>
                     mutate(ID = as.factor(ID),
-                           TRT = as.factor(TRT),
-                           TIME = as.factor(TIME),
-                           SEX = as.factor(SEX)) |>
+                           TRT = factor(TRT, levels = c(0, 46, 92),
+                                        labels = c("Control", "Low", "High")),
+                           TIME = factor(TIME, ordered = T,
+                                         levels = c("Pre", "0", "1", "6")),
+                           SEX = factor(SEX, levels = c("G", "M"),
+                                        labels = c("Gelding", "Filly"))) |>
                     select(-c(...9,...10)) |>
                     drop_na()
 
-HorseDat |> ggplot(aes(x=TRT, y = Cortisol)) + geom_violin() + geom_jitter()
+#HorseDat |> ggplot(aes(x=TRT, y = Cortisol)) + geom_violin() + geom_jitter()
 
-HorseDat |> ggplot(aes(x=TRT, y= IgA)) + geom_violin() + geom_jitter()
+##HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() + geom_jitter()
 
-HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() + geom_jitter()
+#HorseDat |> ggplot(aes(x=TRT, y= IgA)) + geom_violin() + geom_jitter()
 
-HorseDat |> ggplot(aes(x=TRT, y= SOD)) + geom_violin() + geom_jitter()
+#HorseDat |> ggplot(aes(x=TRT, y= SOD)) + geom_violin() + geom_jitter()
 ```
+
+```{r}
+#| label: eda
+#| fig-caption: Visualisation of response against fixed effects. Plots with colored points used to explore the potential for interactions.
+#| fig-width: 6.5
+#| fig-height: 9
+#| echo: false
+p0 <- HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() +
+  geom_jitter() +
+  labs(x = "", y = "Prostaglandin E2")
+p1 <- HorseDat |> ggplot(aes(x=SEX, y= PGE2)) + geom_violin() + geom_jitter() +
+  labs(x = "", y = "Prostaglandin E2")
+p2 <- HorseDat |> ggplot(aes(x=interaction(SEX, TRT), y= PGE2)) + geom_violin() + geom_jitter(aes(colour = TRT)) +
+  labs(x = "", y = "Prostaglandin E2") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 15,
+                                                             vjust = 0.01))
+p3 <- HorseDat |> ggplot(aes(x = TIME, y = PGE2)) +
+  labs(x = "Time", y = "Prostaglandin E2") +
+  geom_violin() +
+  geom_jitter()
+p4 <- HorseDat |> ggplot(aes(x = TIME, y = PGE2)) +
+  geom_violin(aes(colour = TRT)) +
+  geom_jitter(aes(colour = TRT)) +
+  facet_wrap(~ TRT) +
+  labs(x = "Time", y = "Prostaglandin E2") +
+  theme(legend.position = "none")
+p5 <- HorseDat |> ggplot(aes(x = TIME, y = PGE2)) +
+  geom_violin() +
+  geom_jitter(aes(colour = TRT)) +
+  facet_wrap(~ SEX) +
+  labs(x = "Time", y = "Prostaglandin E2")
+
+ggarrange(p0, p1, p3, p2, p4, p5, nrow = 3, ncol = 2,
+          labels = c("(A)", "(B)", "(C)", "(D)", "(E)", "(F)"))
+```
+
 
 ## Data analysis and results
 Describe your statistical methods, check assumptions and interpret your results.
 
+After fitting our model for prostaglandin E2, we checked modelling assumptions via visual diagnostics. We see a clear violation of the assumption of homoscedasticity in the plot (A) of @fig-resids where the spread of residuals tends to increase with predicted values. The Q-Q plot in (B) indicates a moderately strong violation of our assumption of normally distributed residuals, showing heavy tails. This indicates intervals from the model will be overly wide and power will be below the nominal level. Next we checked our assumptions of Linearity with the effects plot in @fig-fx. The distributions of partial residuals are all roughly centered at the marginal means, suggesting Linearity is met. The partial residuals for Low in (A) show a bimodal distribution. We did not see any interaction that could explain this in our exploratory data analysis, suggesting a potentially unobserved omitted variable. Finally, we checked the assumption of normally distributed random effects with a Q-Q plot displayed in @fig-qq. The plot displays a slightly light left tail, and heavy right, indicating a mild violation of normality. Intervals are likely to be slightly wider and power slightly lower than desired.
+
+Even though our model violates multiple assumptions, we proceeded to assess the effect of probiotic treatments on prostaglandin E2 via a type II ANOVA. Under the null hypothesis, the mean effect of low, high, and no probiotics are the same $(\alpha_1=\alpha_2=\alpha_3)$; once sex, time, and horse are accounted for. Our alternative hypothesis states at least one of these means differ. The test provides very weak evidence of a treatment effect ($\chi^2_2=3.855$, p-value=0.146). Using the Bonferroni correction, we then constructed contrasts for the treatment levels. The Low probiotic treatment had a PEG2 667 points lower than the control (95% confidence interval for control-low: [-1563, 229]). The high probiotic treatment group had a PEG2 that was 497 higher than the control on average (95% confidence interval for control-high [-1405, 411]). Finally, the contrast for low minus high was estimated to be 170 (95% confidence interval: [-775, 1115]). These results do not indicate a clear difference in PEG2 among horses based on probiotic treatment, but a relationship is cerrtainly possible. Addressing modelling assumptions and increased sample size may provide stronger evidence for a probiotic effect. A log transform may address these violations.
+
 ```{r}
-#| label: fitting models
+#| include: false
 #| echo: false
 #| warning: false
 
 fit.lm.Cortisol <- lmer(Cortisol ~ TRT + SEX + TRT:(1|ID), data= HorseDat)
 summary(fit.lm.Cortisol)
-plot(fit.lm.Cortisol)
+resid_panel(fit.lm.Cortisol)
 fit.lm.IgA <- lmer(IgA ~ TRT + SEX + TRT:(1|ID), data= HorseDat)
 summary(fit.lm.IgA)
-plot(fit.lm.IgA)
-fit.lm.PGE2 <- lmer(PGE2 ~ TRT + SEX + TRT:(1|ID), data= HorseDat)
-summary(fit.lm.PGE2)
-plot(fit.lm.PGE2)
+resid_panel(fit.lm.IgA)
 fit.lm.SOD <- lmer(SOD ~ TRT + SEX + TRT:(1|ID), data= HorseDat)
 summary(fit.lm.SOD)
-plot(fit.lm.SOD)
+resid_panel(fit.lm.SOD)
 ```
+
+```{r}
+#| label: fitting model
+#| echo: false
+#| warning: false
+
+fit.lm.PGE2 <- lmer(PGE2 ~ TRT + SEX + TIME + TRT:(1|ID), data= HorseDat)
+summary(fit.lm.PGE2)
+car::Anova(fit.lm.PGE2)
+emm <- emmeans(fit.lm.PGE2, specs = "TRT", adjust = "bonferroni")
+pairs(emm)
+confint(pairs(emm))
+```
+
+```{r}
+#| label: resids
+#| echo: false
+#| fig-cap: Panel of residual diagnostics for prostaglandin E2 model
+resid_panel(fit.lm.PGE2)
+grid.text("(A)", 0.03, 0.95)
+grid.text("(C)", 0.03, 0.45)
+grid.text("(D)", 0.53, 0.45)
+grid.text("(B)", 0.53, 0.95)
+```
+
+```{r}
+#| label: fx
+#| echo: false
+#| fig-cap: Panel of effects plot for prostaglandin E2 model
+eff_list <- allEffects(fit.lm.PGE2, residuals = T)
+pfx <- lapply(eff_list, plot)
+ggarrange(plotlist = pfx, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
+```
+
+```{r}
+#| label: qq
+#| echo: false
+#| fig-cap: Quantile-Quantile plot of random intercepts for horse nested within treatment
+ggplot() +
+  geom_qq(aes(sample = ranef(fit.lm.PGE2)$ID$`(Intercept)`)) +
+  geom_qq_line(aes(sample = ranef(fit.lm.PGE2)$ID$`(Intercept)`)) +
+  labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
+       y = "Estimated Random Effects")
+```
+
+
 
 ## Discussion
 Provide a written discussion about the take-away points from your study. Feel free to include commentary about any lessons you learned through this process.
