@@ -65,27 +65,29 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
         3. Equipment - For this particular study, there were issues with the hot walker (how we exercise the horses) that prevented the SET from being as intense as it should have been to illicit a true stress response.
 
 5.	Pilot experiment: 
-     1. Will need to run power analysis here..... could use one of the markers I have results on and just run with that for "Pilot Study". Actual power analysis was based off of joint markers for a different manuscript from this study. 
+     1. For the purposes of this project, cortisol values will be used as a "Pilot Study" to determine sample size through a power analysis. A true difference of 20,000 pg/mL serum cortisol will be used (found to be significantly different in a similar study in horses). The standard deviation used is from the current cortisol samples as previously analyzed.
 
 Power test for approximate delta of serum cortisol found to be significantly different in a similar study, SD from current cortisol samples.
 Sample Size: `round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")` =  `r round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")$n)`
 
 6.	Specify the model: 
-$Y_{ijht} = \mu + \alpha_i + \beta_j + T_{h(i)} + \epsilon_{ijht}$
+$Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_{h(i)} + \epsilon_{ijkht}$
 
         Where:
 
-          $Y_{ijt}$ is the response (cortisol, PGE2, SOD, or fecal IgA)
+          $Y_{ijkht}$ is the response (cortisol, PGE2, SOD, or fecal IgA)
 
           $\mu$ is a constant
 
           $\alpha_i$ is main effect of treatment (CON, LOW, HIGH postbiotic supplementation)
 
-          $\beta_j$ is main effect of block (sex)
+          $\beta_j$ is main effect of time 
+
+          $\gamma_k$ is the block effect (sex)
 
           $T_{h(i)}$ is random effect of horse within treatment
 
-          $\epsilon_{ijht}$ is the error term
+          $\epsilon_{ijkht}$ is the error term
 
 7.	Outline the analysis:
      1. Results will be analyzed using ANOVA for mixed effects models with repeated measures of time.
@@ -95,6 +97,7 @@ $Y_{ijht} = \mu + \alpha_i + \beta_j + T_{h(i)} + \epsilon_{ijht}$
      2. The study was completed over a span of 69 days in Fall of 2022.
 
 9.	Review and revise. 
+Following the pilot study power analysis, the sample size for this study (n = 10/trt) should be more than sufficient to detect a difference if there truly is one. 
 
 
 # Part 2: Report
@@ -104,16 +107,15 @@ A healthy intestinal barrier helps aid in nutrient absorption and immune defense
 
 ## Experimental units and randomization
 Thirty Quarter Horse yearlings (374 ± 25 kg BW; 562 ± 16 d of age; 15 fillies and 15 geldings) were used for this study.
-Treatment allocations (n = 10 per treatment) were fixed, while experimental units were assigned random numbers and stratified within treatment groups until optimally balanced groups were created. Horses were stratified by BW, age, and sex and randomly assigned to one of three dietary treatments (n = 10/treatment): CON (0), LOW (46), or HIGH (92 mg/kg BW SCFP).
+Treatment allocations (n = 10 per treatment) were fixed, while experimental units were assigned random numbers and stratified within treatment groups until optimally balanced groups were created. Horses were stratified by BW, age, and sex and randomly assigned to one of three dietary treatments (n = 10/treatment): CON (0), LOW (46), or HIGH (92 mg/kg BW postbiotic).
 Blood and fecal samples will be obtained at pre-determined time points surrounding the SET and analyzed by ELISA for biological markers indicating stress and inflammation in response to an exercise challenge.
 
 ## Pilot study and sample size calculations
-Summarize what you learned from your pilot study. Include sample size calculations - specify and defend your assumptions and choices. It is okay if you cannot achieve the desired sample as long as you justify why.
+From a power analysis based on cortisol values with a true difference of 20,000 pg/mL and a standard deviation of 5419 pg/mL, 3 horses per treatment will be required for a power level of 0.90 and an alpha of 0.05.
+The sample size of n = 10/trt in the present study is sufficient.
 
 ## Data overview
-Describe your data and present figure(s) to illustrate the response.
-
-For our analysis of the effects of postbiotic treatments on prostaglandin E2 levels in quarterly horse yearlings, we will control for time and sex while accounting for repeated measures on the horses. @fig-eda displays a panel of plots used to visualize the response against the predictors, and explore the potential for interactions between our covariates. The violin plots in (A) suggest the treatment may have some effect as the observed PEG2 tends to be higher for horse with a larger postbiotic supplement. The violin plots in (B) appear nearly identical, providing little to no evidence for a sex effect. In plot (C), we explore the potential for changing PEG2 over time. There is no clear discernible trend, but there appears to be slightly less variation in PEG2 prior to applying treatments. This may suggest a potential treatment effect, as PEG2 measurements were more similar, prior to applying treatments. In plot (D), we see PEG2 measurements for geldings were slightly higher on average then fillies in the control and low probiotic treatments; but the reverse is true for the high treatment group. This hints at a potential interaction, but it's quite possible that patterns may be due to random chance. Both plots (E) and (F) show slightly different patterns in PEG2 measurements over time by treatment and sex respectively. These variations are slight and provide little to no evidence of interactions.
+For our analysis of the effects of postbiotic treatments on prostaglandin E2 (PGE2) levels in quarter horse yearlings, we will control for time and sex while accounting for repeated measures on the horses. @fig-eda displays a panel of plots used to visualize the response against the predictors, and explore the potential for interactions between our covariates. The violin plots in (A) suggest the treatment may have some effect as the observed PGE2 tends to be higher for horse with a larger postbiotic supplement. The violin plots in (B) appear nearly identical, providing little to no evidence for a sex effect. In plot (C), we explore the potential for changing PGE2 over time. There is no clear discernible trend, but there appears to be slightly less variation in PGE2 prior to applying treatments. This may suggest a potential treatment effect, as PGE2 measurements were more similar, prior to applying treatments. In plot (D), we see PGE2 measurements for geldings were slightly higher on average then fillies in the control and low probiotic treatments; but the reverse is true for the high treatment group. This hints at a potential interaction, but it's quite possible that patterns may be due to random chance. Both plots (E) and (F) show slightly different patterns in PGE2 measurements over time by treatment and sex respectively. These variations are slight and provide little to no evidence of interactions.
 
 ```{r}
 #| label: loading and visualizing data
@@ -180,11 +182,9 @@ ggarrange(p0, p1, p3, p2, p4, p5, nrow = 3, ncol = 2,
 
 
 ## Data analysis and results
-Describe your statistical methods, check assumptions and interpret your results.
+After fitting our model for prostaglandin E2, we checked modelling assumptions via visual diagnostics. We see a clear violation of the assumption of homoscedasticity in the plot (A) of @fig-resids where the spread of residuals tends to increase with predicted values. The Q-Q plot in (B) indicates a moderately strong violation of our assumption of normally distributed residuals, showing heavy tails. This indicates intervals from the model will be overly wide and power will be below the nominal level. Next we checked our assumptions of linearity with the effects plot in @fig-fx. The distributions of partial residuals are all roughly centered at the marginal means, suggesting linearity is met. The partial residuals for Low in (A) show a bimodal distribution. We did not see any interaction that could explain this in our exploratory data analysis, suggesting a potentially unobserved omitted variable. Finally, we checked the assumption of normally distributed random effects with a Q-Q plot displayed in @fig-qq. The plot displays a slightly light left tail, and heavy right, indicating a mild violation of normality. Intervals are likely to be slightly wider and power slightly lower than desired.
 
-After fitting our model for prostaglandin E2, we checked modelling assumptions via visual diagnostics. We see a clear violation of the assumption of homoscedasticity in the plot (A) of @fig-resids where the spread of residuals tends to increase with predicted values. The Q-Q plot in (B) indicates a moderately strong violation of our assumption of normally distributed residuals, showing heavy tails. This indicates intervals from the model will be overly wide and power will be below the nominal level. Next we checked our assumptions of Linearity with the effects plot in @fig-fx. The distributions of partial residuals are all roughly centered at the marginal means, suggesting Linearity is met. The partial residuals for Low in (A) show a bimodal distribution. We did not see any interaction that could explain this in our exploratory data analysis, suggesting a potentially unobserved omitted variable. Finally, we checked the assumption of normally distributed random effects with a Q-Q plot displayed in @fig-qq. The plot displays a slightly light left tail, and heavy right, indicating a mild violation of normality. Intervals are likely to be slightly wider and power slightly lower than desired.
-
-Even though our model violates multiple assumptions, we proceeded to assess the effect of probiotic treatments on prostaglandin E2 via a type II ANOVA. Under the null hypothesis, the mean effect of low, high, and no probiotics are the same $(\alpha_1=\alpha_2=\alpha_3)$; once sex, time, and horse are accounted for. Our alternative hypothesis states at least one of these means differ. The test provides very weak evidence of a treatment effect ($\chi^2_2=3.855$, p-value=0.146). Using the Bonferroni correction, we then constructed contrasts for the treatment levels. The Low probiotic treatment had a PEG2 667 points lower than the control (95% confidence interval for control-low: [-1563, 229]). The high probiotic treatment group had a PEG2 that was 497 higher than the control on average (95% confidence interval for control-high [-1405, 411]). Finally, the contrast for low minus high was estimated to be 170 (95% confidence interval: [-775, 1115]). These results do not indicate a clear difference in PEG2 among horses based on probiotic treatment, but a relationship is cerrtainly possible. Addressing modelling assumptions and increased sample size may provide stronger evidence for a probiotic effect. A log transform may address these violations.
+Even though our model violates multiple assumptions, we proceeded to assess the effect of postbiotic treatments on prostaglandin E2 via a type II ANOVA. Under the null hypothesis, the mean effect of low, high, and no probiotics are the same $(\alpha_1=\alpha_2=\alpha_3)$; once sex, time, and horse are accounted for. Our alternative hypothesis states at least one of these means differ. The test provides very weak evidence of a treatment effect ($\chi^2_2=3.855$, p-value=0.146). Using the Bonferroni correction, we then constructed contrasts for the treatment levels. The Low probiotic treatment had a PEG2 667 pg/mL lower than the control (95% confidence interval for control-low: [-1563, 229]). The high probiotic treatment group had a PGE2 that was 497 pg/mL higher than the control on average (95% confidence interval for control-high [-1405, 411]). Finally, the contrast for low minus high was estimated to be 170 pg/mL (95% confidence interval: [-775, 1115]). These results do not indicate a clear difference in PGE2 among horses based on postbiotic treatment, but a relationship is cerrtainly possible. Addressing modelling assumptions and increased sample size may provide stronger evidence for a postbiotic effect. A log transform may address these violations.
 
 ```{r}
 #| include: false
@@ -246,7 +246,7 @@ ggplot() +
        y = "Estimated Random Effects")
 ```
 
-
-
 ## Discussion
-Provide a written discussion about the take-away points from your study. Feel free to include commentary about any lessons you learned through this process.
+Results suggest that there is very weak evidence for a true difference in PGE2 levels (a marker of inflammation) due to postbiotic supplementation (dietary treatment) in yearling quarter horses faced with an exercise challenge.
+In terms of experimental design and analysis, a number of changes may have improved this study. During this study, equipment difficulties caused the hot walker to be unusable at certain speeds. Due to this, the SET was not as intense as originally planned in order to avoid injury to the horses due to uneven/suboptimal footing. As a result, the SET was likely not a true "exercise stressor" and did not induce the desired level of stress to be able to parse out differences in stress responses by dietary treatments. 
+As PGE2 differed by treatment group at the PRE timepoint, it may be appropriate to use baseline PGE2 values (PRE values) as a covariate to normalize starting inflammation levels between groups, as individual animal levels of stress/inflammation may influence the analysis of these markers. 
