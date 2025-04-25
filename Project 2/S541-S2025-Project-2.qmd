@@ -21,22 +21,6 @@ library(grid)
 theme_set(theme_bw())
 ```
 
-# LEVEL 1 Header
-
-## LEVEL 2 Header
-
-### LEVEL 3 Header
-
-#### LEVEL 4 Header
-
-1. List Item 1
-   1. Sublist item 1
-      1. sub-sublist item 1
-2. List Item 2
-3. List Item 3
-
-- Unordered list item
-  - unordered sub-list item
 
 # Part 1: Experimental Design Plan (9-step checklist)
 
@@ -73,21 +57,21 @@ Sample Size: `round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, 
 6.	Specify the model: 
 $Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_{h(i)} + \epsilon_{ijkht}$
 
-        Where:
+    Where:
 
-          $Y_{ijkht}$ is the response (cortisol, PGE2, SOD, or fecal IgA)
+    $Y_{ijkht}$ is the response (cortisol, PGE2, SOD, or fecal IgA)
 
-          $\mu$ is a constant
+    $\mu$ is a constant
 
-          $\alpha_i$ is main effect of treatment (CON, LOW, HIGH postbiotic supplementation)
+    $\alpha_i$ is main effect of treatment (CON, LOW, HIGH postbiotic supplementation)
 
-          $\beta_j$ is main effect of time 
+    $\beta_j$ is main effect of time 
 
-          $\gamma_k$ is the block effect (sex)
+    $\gamma_k$ is the block effect (sex)
 
-          $T_{h(i)}$ is random effect of horse within treatment
+    $T_{h(i)}$ is random effect of horse within treatment
 
-          $\epsilon_{ijkht}$ is the error term
+    $\epsilon_{ijkht}$ is the error term
 
 7.	Outline the analysis:
      1. Results will be analyzed using ANOVA for mixed effects models with repeated measures of time.
@@ -146,11 +130,12 @@ HorseDat <- readxl::read_xlsx("Project 2 Data.xlsx") |>
 ```
 
 ```{r}
-#| label: eda
-#| fig-caption: Visualisation of response against fixed effects. Plots with colored points used to explore the potential for interactions.
+#| label: fig-eda
+#| fig-caption: "Visualisation of response against fixed effects. Plots with colored points used to explore the potential for interactions."
 #| fig-width: 6.5
 #| fig-height: 9
 #| echo: false
+
 p0 <- HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() +
   geom_jitter() +
   labs(x = "", y = "Prostaglandin E2")
@@ -216,9 +201,9 @@ confint(pairs(emm))
 ```
 
 ```{r}
-#| label: resids
+#| label: fig-resids
 #| echo: false
-#| fig-cap: Panel of residual diagnostics for prostaglandin E2 model
+#| fig-cap: "Panel of residual diagnostics for prostaglandin E2 model"
 resid_panel(fit.lm.PGE2)
 grid.text("(A)", 0.03, 0.95)
 grid.text("(C)", 0.03, 0.45)
@@ -227,18 +212,18 @@ grid.text("(B)", 0.53, 0.95)
 ```
 
 ```{r}
-#| label: fx
+#| label: fig-fx
 #| echo: false
-#| fig-cap: Panel of effects plot for prostaglandin E2 model
+#| fig-cap: "Panel of effects plot for prostaglandin E2 model"
 eff_list <- allEffects(fit.lm.PGE2, residuals = T)
 pfx <- lapply(eff_list, plot)
 ggarrange(plotlist = pfx, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
 ```
 
 ```{r}
-#| label: qq
+#| label: fig-qq
 #| echo: false
-#| fig-cap: Quantile-Quantile plot of random intercepts for horse nested within treatment
+#| fig-cap: "Quantile-Quantile plot of random intercepts for horse nested within treatment"
 ggplot() +
   geom_qq(aes(sample = ranef(fit.lm.PGE2)$ID$`(Intercept)`)) +
   geom_qq_line(aes(sample = ranef(fit.lm.PGE2)$ID$`(Intercept)`)) +
@@ -247,6 +232,7 @@ ggplot() +
 ```
 
 ## Discussion
-Results suggest that there is very weak evidence for a true difference in PGE2 levels (a marker of inflammation) due to postbiotic supplementation (dietary treatment) in yearling quarter horses faced with an exercise challenge.
-In terms of experimental design and analysis, a number of changes may have improved this study. During this study, equipment difficulties caused the hot walker to be unusable at certain speeds. Due to this, the SET was not as intense as originally planned in order to avoid injury to the horses due to uneven/suboptimal footing. As a result, the SET was likely not a true "exercise stressor" and did not induce the desired level of stress to be able to parse out differences in stress responses by dietary treatments. 
-As PGE2 differed by treatment group at the PRE timepoint, it may be appropriate to use baseline PGE2 values (PRE values) as a covariate to normalize starting inflammation levels between groups, as individual animal levels of stress/inflammation may influence the analysis of these markers. 
+
+|   Results suggest that there is very weak evidence for a true difference in PGE2 levels (a marker of inflammation) due to postbiotic supplementation (dietary treatment) in yearling quarter horses faced with an exercise challenge.
+|   In terms of experimental design and analysis, a number of changes may have improved this study. During this study, equipment difficulties caused the hot walker to be unusable at certain speeds. Due to this, the SET was not as intense as originally planned in order to avoid injury to the horses due to uneven/suboptimal footing. As a result, the SET was likely not a true "exercise stressor" and did not induce the desired level of stress to be able to parse out differences in stress responses by dietary treatments. 
+|   As PGE2 differed by treatment group at the PRE timepoint, it may be appropriate to use baseline PGE2 values (PRE values) as a covariate to normalize starting inflammation levels between groups, as individual animal levels of stress/inflammation may influence the analysis of these markers. 
