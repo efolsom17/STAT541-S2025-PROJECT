@@ -27,7 +27,7 @@ theme_set(theme_bw())
 #| echo: false
 #| warning: false
 
-## Comment this line out when you got to knit the document
+## Comment this line out when you go to knit the document
 #setwd(paste0(getwd(),"/Project 2"))
 
 HorseDat <- readxl::read_xlsx("Project 2 Data.xlsx") |>
@@ -78,13 +78,10 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
         3. Equipment - For this particular study, there were issues with the hot walker (how we exercise the horses) that prevented the SET from being as intense as it should have been to illicit a true stress response.
 
 5.	Pilot experiment: 
-     1. For the purposes of this project, cortisol values will be used as a "Pilot Study" to determine sample size through a power analysis. A true difference of 20,000 pg/mL serum cortisol will be used (found to be significantly different in a similar study in horses). The standard deviation used is from the current cortisol samples as previously analyzed.
-
-Power test for approximate delta of serum cortisol found to be significantly different in a similar study, SD from current cortisol samples.
-Sample Size: `r round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")$n)`
+     1. For the purposes of this project, cortisol values will be used as a "Pilot Study" to determine sample size through a power analysis. A true difference of 20,000 pg/mL serum cortisol will be used (found to be significantly different in a similar study in horses). The standard deviation used is from the current cortisol samples as previously analyzed. The power test based on cortisol values determined that 3 horses per treatment group are needed for a power of 0.90 and significance level of 0.05.
 
 6.	Specify the model: 
-$Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_{h(i)} + \epsilon_{ijkht}$
+$Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_h + \epsilon_{ijkht}$
 
     Where:
 
@@ -98,7 +95,7 @@ $Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_{h(i)} + \epsilon_{ijkht}$
 
     $\gamma_k$ is the block effect (sex)
 
-    $T_{h(i)}$ is random effect of horse within treatment
+    $T_h$ is random effect of horse (ID)
 
     $\epsilon_{ijkht}$ is the error term
 
@@ -128,7 +125,7 @@ From a power analysis based on cortisol values with a true difference of 20,000 
 The sample size of n = 10/trt in the present study is sufficient.
 
 ## Data overview
-For our analysis of the effects of postbiotic treatments on prostaglandin E2 (PGE2) levels in quarter horse yearlings, we will control for time and sex while accounting for repeated measures on the horses. @fig-eda displays a panel of plots used to visualize the response against the predictors, and explore the potential for interactions between our covariates. The violin plots in (A) suggest the treatment may have some effect as the observed PGE2 tends to be higher for horse with a larger postbiotic supplement. The violin plots in (B) appear nearly identical, providing little to no evidence for a sex effect. In plot (C), we explore the potential for changing PGE2 over time. There is no clear discernible trend, but there appears to be slightly less variation in PGE2 prior to applying treatments. This may suggest a potential treatment effect, as PGE2 measurements were more similar, prior to applying treatments. In plot (D), we see PGE2 measurements for geldings were slightly higher on average then fillies in the control and low probiotic treatments; but the reverse is true for the high treatment group. This hints at a potential interaction, but it's quite possible that patterns may be due to random chance. Both plots (E) and (F) show slightly different patterns in PGE2 measurements over time by treatment and sex respectively. These variations are slight and provide little to no evidence of interactions.
+For our analysis of the effects of postbiotic treatments on prostaglandin E2 (PGE2) levels in quarter horse yearlings, we will control for time and sex while accounting for repeated measures on the horses. @fig-eda displays a panel of plots used to visualize the response against the predictors, and explore the potential for interactions between our covariates. The violin plots in (A) suggest the treatment may have some effect as the observed PGE2 tends to be higher for horse with a larger postbiotic supplement. The violin plots in (B) appear nearly identical, providing little to no evidence for a sex effect. In plot (C), we explore the potential for changing PGE2 over time. There is no clear discernible trend, but there appears to be slightly less variation in PGE2 prior to exercise. This may suggest a potential time effect, as PGE2 measurements were more similar prior to exercise. In plot (D), we see PGE2 measurements for geldings were slightly higher on average then fillies in the control and low probiotic treatments; but the reverse is true for the high treatment group. This hints at a potential interaction, but it's quite possible that patterns may be due to random chance. Both plots (E) and (F) show slightly different patterns in PGE2 measurements over time by treatment and sex respectively. These variations are slight and provide little to no evidence of interactions.
 
 ```{r}
 #| label: fig-eda
@@ -455,9 +452,15 @@ ggplot() +
        y = "Estimated Random Effects")
 ```
 
-
 ## Discussion
 
 |   Results suggest that there is very weak evidence for a true difference in PGE2 levels (a marker of inflammation) due to postbiotic supplementation (dietary treatment) in yearling quarter horses faced with an exercise challenge.
 |   In terms of experimental design and analysis, a number of changes may have improved this study. During this study, equipment difficulties caused the hot walker to be unusable at certain speeds. Due to this, the SET was not as intense as originally planned in order to avoid injury to the horses due to uneven/suboptimal footing. As a result, the SET was likely not a true "exercise stressor" and did not induce the desired level of stress to be able to parse out differences in stress responses by dietary treatments. 
 |   As PGE2 differed by treatment group at the PRE timepoint, it may be appropriate to use baseline PGE2 values (PRE values) as a covariate to normalize starting inflammation levels between groups, as individual animal levels of stress/inflammation may influence the analysis of these markers. 
+
+
+Power test for approximate delta of serum cortisol found to be significantly different in a similar study, SD from current cortisol samples.
+
+```{r}
+Sample Size: `r round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")$n)`
+```
