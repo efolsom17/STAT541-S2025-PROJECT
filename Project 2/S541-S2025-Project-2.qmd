@@ -193,7 +193,7 @@ resid_panel(fit.lm.SOD)
 #| echo: false
 #| warning: false
 
-fit.lm.PGE2 <- lmer(PGE2 ~ TRT + SEX + TIME + TRT:(1|ID), data= HorseDat)
+fit.lm.PGE2 <- lmer(PGE2 ~ TRT + SEX + TIME + (1|ID:TRT), data= HorseDat)
 summary(fit.lm.PGE2)
 car::Anova(fit.lm.PGE2)
 emm <- emmeans(fit.lm.PGE2, specs = "TRT", adjust = "bonferroni")
@@ -237,7 +237,7 @@ ggplot() +
 #| echo: false
 #| warning: false
 
-fit.lm.PGE2.log <- lmer(log(PGE2) ~ TRT + SEX + TIME + TRT:(1|ID), data= HorseDat)
+fit.lm.PGE2.log <- lmer(log(PGE2) ~ TRT + SEX + TIME + (1|ID:TRT), data= HorseDat)
 summary(fit.lm.PGE2.log)
 car::Anova(fit.lm.PGE2.log)
 emm.log <- emmeans(fit.lm.PGE2.log, specs = "TRT", adjust = "bonferroni")
