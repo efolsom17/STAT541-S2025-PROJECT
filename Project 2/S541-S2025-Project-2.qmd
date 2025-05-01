@@ -22,6 +22,35 @@ theme_set(theme_bw())
 ```
 
 
+```{r}
+#| label: loading and visualizing data
+#| echo: false
+#| warning: false
+
+## Comment this line out when you got to knit the document
+#setwd(paste0(getwd(),"/Project 2"))
+
+HorseDat <- readxl::read_xlsx("Project 2 Data.xlsx") |>
+                    mutate(ID = as.factor(ID),
+                           TRT = factor(TRT, levels = c(0, 46, 92),
+                                        labels = c("Control", "Low", "High")),
+                           TIME = factor(TIME, ordered = T,
+                                         levels = c("Pre", "0", "1", "6")),
+                           SEX = factor(SEX, levels = c("G", "M"),
+                                        labels = c("Gelding", "Filly"))) |>
+                    select(-c(...9,...10)) |>
+                    drop_na()
+
+# HorseDat |> ggplot(aes(x=TRT, y = Cortisol)) + geom_violin() + geom_jitter()
+
+# HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() + geom_jitter()
+
+# HorseDat |> ggplot(aes(x=TRT, y= IgA)) + geom_violin() + geom_jitter()
+
+# HorseDat |> ggplot(aes(x=TRT, y= SOD)) + geom_violin() + geom_jitter()
+```
+
+
 # Part 1: Experimental Design Plan (9-step checklist)
 
 1.	Define the objectives: 
@@ -52,7 +81,7 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
      1. For the purposes of this project, cortisol values will be used as a "Pilot Study" to determine sample size through a power analysis. A true difference of 20,000 pg/mL serum cortisol will be used (found to be significantly different in a similar study in horses). The standard deviation used is from the current cortisol samples as previously analyzed.
 
 Power test for approximate delta of serum cortisol found to be significantly different in a similar study, SD from current cortisol samples.
-Sample Size: `round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")` =  `r round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")$n)`
+Sample Size: `r round(power.t.test(delta = 20000, sd = 5419.13, sig.level = 0.05, type = "two.sample", power = 0.90, alternative = "two.sided")$n)`
 
 6.	Specify the model: 
 $Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_{h(i)} + \epsilon_{ijkht}$
@@ -102,34 +131,6 @@ The sample size of n = 10/trt in the present study is sufficient.
 For our analysis of the effects of postbiotic treatments on prostaglandin E2 (PGE2) levels in quarter horse yearlings, we will control for time and sex while accounting for repeated measures on the horses. @fig-eda displays a panel of plots used to visualize the response against the predictors, and explore the potential for interactions between our covariates. The violin plots in (A) suggest the treatment may have some effect as the observed PGE2 tends to be higher for horse with a larger postbiotic supplement. The violin plots in (B) appear nearly identical, providing little to no evidence for a sex effect. In plot (C), we explore the potential for changing PGE2 over time. There is no clear discernible trend, but there appears to be slightly less variation in PGE2 prior to applying treatments. This may suggest a potential treatment effect, as PGE2 measurements were more similar, prior to applying treatments. In plot (D), we see PGE2 measurements for geldings were slightly higher on average then fillies in the control and low probiotic treatments; but the reverse is true for the high treatment group. This hints at a potential interaction, but it's quite possible that patterns may be due to random chance. Both plots (E) and (F) show slightly different patterns in PGE2 measurements over time by treatment and sex respectively. These variations are slight and provide little to no evidence of interactions.
 
 ```{r}
-#| label: loading and visualizing data
-#| echo: false
-#| warning: false
-
-## Comment this line out when you got to knit the document
-#setwd(paste0(getwd(),"/Project 2"))
-
-HorseDat <- readxl::read_xlsx("Project 2 Data.xlsx") |>
-                    mutate(ID = as.factor(ID),
-                           TRT = factor(TRT, levels = c(0, 46, 92),
-                                        labels = c("Control", "Low", "High")),
-                           TIME = factor(TIME, ordered = T,
-                                         levels = c("Pre", "0", "1", "6")),
-                           SEX = factor(SEX, levels = c("G", "M"),
-                                        labels = c("Gelding", "Filly"))) |>
-                    select(-c(...9,...10)) |>
-                    drop_na()
-
-#HorseDat |> ggplot(aes(x=TRT, y = Cortisol)) + geom_violin() + geom_jitter()
-
-##HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() + geom_jitter()
-
-#HorseDat |> ggplot(aes(x=TRT, y= IgA)) + geom_violin() + geom_jitter()
-
-#HorseDat |> ggplot(aes(x=TRT, y= SOD)) + geom_violin() + geom_jitter()
-```
-
-```{r}
 #| label: fig-eda
 #| fig-caption: "Visualisation of response against fixed effects. Plots with colored points used to explore the potential for interactions."
 #| fig-width: 6.5
@@ -172,7 +173,7 @@ After fitting our model for prostaglandin E2, we checked modelling assumptions v
 Even though our model violates multiple assumptions, we proceeded to assess the effect of postbiotic treatments on prostaglandin E2 via a type II ANOVA. Under the null hypothesis, the mean effect of low, high, and no probiotics are the same $(\alpha_1=\alpha_2=\alpha_3)$; once sex, time, and horse are accounted for. Our alternative hypothesis states at least one of these means differ. The test provides very weak evidence of a treatment effect ($\chi^2_2=3.855$, p-value=0.146). Using the Bonferroni correction, we then constructed contrasts for the treatment levels. The Low probiotic treatment had a PEG2 667 pg/mL lower than the control (95% confidence interval for control-low: [-1563, 229]). The high probiotic treatment group had a PGE2 that was 497 pg/mL higher than the control on average (95% confidence interval for control-high [-1405, 411]). Finally, the contrast for low minus high was estimated to be 170 pg/mL (95% confidence interval: [-775, 1115]). These results do not indicate a clear difference in PGE2 among horses based on postbiotic treatment, but a relationship is cerrtainly possible. Addressing modelling assumptions and increased sample size may provide stronger evidence for a postbiotic effect. A log transform may address these violations.
 
 ```{r}
-#| include: false
+#| include: true
 #| echo: false
 #| warning: false
 
@@ -230,6 +231,230 @@ ggplot() +
   labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
        y = "Estimated Random Effects")
 ```
+
+```{r}
+#| label: fitting model log
+#| echo: false
+#| warning: false
+
+fit.lm.PGE2.log <- lmer(log(PGE2) ~ TRT + SEX + TIME + TRT:(1|ID), data= HorseDat)
+summary(fit.lm.PGE2.log)
+car::Anova(fit.lm.PGE2.log)
+emm.log <- emmeans(fit.lm.PGE2.log, specs = "TRT", adjust = "bonferroni")
+pairs(emm.log)
+confint(pairs(emm.log))
+```
+
+```{r}
+#| label: fig-resids-log
+#| echo: false
+#| fig-cap: "Panel of residual diagnostics for prostaglandin E2 model (Log Transformed)"
+resid_panel(fit.lm.PGE2.log)
+grid.text("(A)", 0.03, 0.95)
+grid.text("(C)", 0.03, 0.45)
+grid.text("(D)", 0.53, 0.45)
+grid.text("(B)", 0.53, 0.95)
+```
+
+```{r}
+#| label: fig-fx-log
+#| echo: false
+#| fig-cap: "Panel of effects plot for prostaglandin E2 model (Log Transformed)"
+eff_list_log <- allEffects(fit.lm.PGE2.log, residuals = T)
+pfx.log <- lapply(eff_list_log, plot)
+ggarrange(plotlist = pfx.log, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
+```
+
+```{r}
+#| label: fig-qq-log
+#| echo: false
+#| fig-cap: "Quantile-Quantile plot of random intercepts for horse nested within treatment (Log Transformed)"
+ggplot() +
+  geom_qq(aes(sample = ranef(fit.lm.PGE2.log)$ID$`(Intercept)`)) +
+  geom_qq_line(aes(sample = ranef(fit.lm.PGE2.log)$ID$`(Intercept)`)) +
+  labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
+       y = "Estimated Random Effects")
+```
+
+
+```{r}
+#| label: fitting model no ID
+#| echo: false
+#| warning: false
+
+fit2.lm.PGE2 <- lmer(PGE2 ~ TRT + SEX + TIME + (1|ID), data= HorseDat)
+summary(fit2.lm.PGE2)
+car::Anova(fit2.lm.PGE2)
+emm2 <- emmeans(fit2.lm.PGE2, specs = "TRT", adjust = "bonferroni")
+pairs(emm2)
+confint(pairs(emm2))
+```
+
+```{r}
+#| label: fig-resids-noID
+#| echo: false
+#| fig-cap: "Panel of residual diagnostics for prostaglandin E2 model (ID not nested but random effect)"
+resid_panel(fit2.lm.PGE2)
+grid.text("(A)", 0.03, 0.95)
+grid.text("(C)", 0.03, 0.45)
+grid.text("(D)", 0.53, 0.45)
+grid.text("(B)", 0.53, 0.95)
+```
+
+```{r}
+#| label: fig-fx-noID
+#| echo: false
+#| fig-cap: "Panel of effects plot for prostaglandin E2 model (ID not nested but random effect)"
+eff2_list <- allEffects(fit2.lm.PGE2, residuals = T)
+pfx2 <- lapply(eff2_list, plot)
+ggarrange(plotlist = pfx2, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
+```
+
+```{r}
+#| label: fig-qq-noID
+#| echo: false
+#| fig-cap: "Quantile-Quantile plot of random intercepts for horse nested within treatment (ID not nested but random effect)"
+ggplot() +
+  geom_qq(aes(sample = ranef(fit2.lm.PGE2)$ID$`(Intercept)`)) +
+  geom_qq_line(aes(sample = ranef(fit2.lm.PGE2)$ID$`(Intercept)`)) +
+  labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
+       y = "Estimated Random Effects")
+```
+
+```{r}
+#| label: fitting model log no id
+#| echo: false
+#| warning: false
+
+fit2.lm.PGE2.log <- lmer(log(PGE2) ~ TRT + SEX + TIME + (1|ID), data= HorseDat)
+summary(fit2.lm.PGE2.log)
+car::Anova(fit2.lm.PGE2.log)
+emm2.log <- emmeans(fit2.lm.PGE2.log, specs = "TRT", adjust = "bonferroni")
+pairs(emm2.log)
+confint(pairs(emm2.log))
+```
+
+```{r}
+#| label: fig-resids-log-noID
+#| echo: false
+#| fig-cap: "Panel of residual diagnostics for prostaglandin E2 model (Log Transformed) (ID not nested but random effect)"
+resid_panel(fit2.lm.PGE2.log)
+grid.text("(A)", 0.03, 0.95)
+grid.text("(C)", 0.03, 0.45)
+grid.text("(D)", 0.53, 0.45)
+grid.text("(B)", 0.53, 0.95)
+```
+
+```{r}
+#| label: fig-fx-log-noID
+#| echo: false
+#| fig-cap: "Panel of effects plot for prostaglandin E2 model (Log Transformed) (ID not nested but random effect)"
+eff2_list_log <- allEffects(fit2.lm.PGE2.log, residuals = T)
+pfx2.log <- lapply(eff2_list_log, plot)
+ggarrange(plotlist = pfx2.log, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
+```
+
+```{r}
+#| label: fig-qq-log-noID
+#| echo: false
+#| fig-cap: "Quantile-Quantile plot of random intercepts for horse nested within treatment (Log Transformed) (ID not nested but random effect)"
+ggplot() +
+  geom_qq(aes(sample = ranef(fit2.lm.PGE2.log)$ID$`(Intercept)`)) +
+  geom_qq_line(aes(sample = ranef(fit2.lm.PGE2.log)$ID$`(Intercept)`)) +
+  labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
+       y = "Estimated Random Effects")
+```
+
+```{r}
+#| label: fitting model no ID2
+#| echo: false
+#| warning: false
+
+fit3.lm.PGE2 <- lm(PGE2 ~ TRT + SEX + TIME, data= HorseDat)
+summary(fit3.lm.PGE2)
+car::Anova(fit3.lm.PGE2)
+emm3 <- emmeans(fit3.lm.PGE2, specs = "TRT", adjust = "bonferroni")
+pairs(emm3)
+confint(pairs(emm3))
+```
+
+```{r}
+#| label: fig-resids-noID2
+#| echo: false
+#| fig-cap: "Panel of residual diagnostics for prostaglandin E2 model (No ID)"
+resid_panel(fit3.lm.PGE2)
+grid.text("(A)", 0.03, 0.95)
+grid.text("(C)", 0.03, 0.45)
+grid.text("(D)", 0.53, 0.45)
+grid.text("(B)", 0.53, 0.95)
+```
+
+```{r}
+#| label: fig-fx-noID2
+#| echo: false
+#| fig-cap: "Panel of effects plot for prostaglandin E2 model (No ID)"
+eff3_list <- allEffects(fit3.lm.PGE2, residuals = T)
+pfx3 <- lapply(eff3_list, plot)
+ggarrange(plotlist = pfx3, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
+```
+
+```{r}
+#| label: fig-qq-noID2
+#| echo: false
+#| eval: false
+#| fig-cap: "Quantile-Quantile plot of random intercepts for horse nested within treatment (No ID)"
+ggplot() +
+  geom_qq(aes(sample = ranef(fit3.lm.PGE2)$ID$`(Intercept)`)) +
+  geom_qq_line(aes(sample = ranef(fit3.lm.PGE2)$ID$`(Intercept)`)) +
+  labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
+       y = "Estimated Random Effects")
+```
+
+```{r}
+#| label: fitting model log no id2
+#| echo: false
+#| warning: false
+
+fit3.lm.PGE2.log <- lm(log(PGE2) ~ TRT + SEX + TIME, data= HorseDat)
+summary(fit3.lm.PGE2.log)
+car::Anova(fit3.lm.PGE2.log)
+emm3.log <- emmeans(fit3.lm.PGE2.log, specs = "TRT", adjust = "bonferroni")
+pairs(emm3.log)
+confint(pairs(emm3.log))
+```
+
+```{r}
+#| label: fig-resids-log-noID2
+#| echo: false
+#| fig-cap: "Panel of residual diagnostics for prostaglandin E2 model (Log Transformed) (No ID)"
+resid_panel(fit3.lm.PGE2.log)
+grid.text("(A)", 0.03, 0.95)
+grid.text("(C)", 0.03, 0.45)
+grid.text("(D)", 0.53, 0.45)
+grid.text("(B)", 0.53, 0.95)
+```
+
+```{r}
+#| label: fig-fx-log-noID2
+#| echo: false
+#| fig-cap: "Panel of effects plot for prostaglandin E2 model (Log Transformed) (No ID)"
+eff3_list_log <- allEffects(fit3.lm.PGE2.log, residuals = T)
+pfx3.log <- lapply(eff3_list_log, plot)
+ggarrange(plotlist = pfx3.log, labels = c("(A)", "(B)", "(C)"), ncol = 2, nrow = 2)
+```
+
+```{r}
+#| label: fig-qq-log-noID2
+#| eval: false
+#| echo: false
+#| fig-cap: "Quantile-Quantile plot of random intercepts for horse nested within treatment (Log Transformed) (No ID)"
+ggplot() +
+  geom_qq(aes(sample = (fit3.lm.PGE2.log)$ID$`(Intercept)`)) +
+  geom_qq_line(aes(sample = (fit3.lm.PGE2.log)$ID$`(Intercept)`)) +
+  labs(title = "Q-Q Plot for Random Effects", x = "Theoretical Quantiles",
+       y = "Estimated Random Effects")
+```
+
 
 ## Discussion
 
