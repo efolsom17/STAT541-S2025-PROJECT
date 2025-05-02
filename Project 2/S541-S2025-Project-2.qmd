@@ -80,7 +80,7 @@ To evaluate stress and inflammation, serum samples will be analyzed by ELISA for
         3. Equipment - For this particular study, there were issues with the hot walker (how we exercise the horses) that prevented the SET from being as intense as it should have been to illicit a true stress response.
 
 5.	Pilot experiment: 
-     1. For the purposes of this project, cortisol values will be used as a "Pilot Study" to determine sample size through a power analysis. A true difference of 20,000 pg/mL serum cortisol will be used (found to be significantly different in a similar study in horses). The standard deviation used is from the current cortisol samples as previously analyzed. The power analysis based on PGE2 values determined that 2 horses per treatment group are needed for a power of 0.90 and significance level of 0.05.
+     1. For the purposes of this project, PGE2 values will be used as a "Pilot Study" to determine sample size through a power analysis. A true difference of 6,000 pg/mL serum PGE2 will be used (found to be significantly different in a similar study in horses). The standard deviation used is from the current PGE2 samples as previously analyzed. The power analysis based on PGE2 values determined that 2 horses per treatment group are needed for a power of 0.90 and significance level of 0.05.
 
 6.	Specify the model: 
 $Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_h + \epsilon_{ijkht}$
