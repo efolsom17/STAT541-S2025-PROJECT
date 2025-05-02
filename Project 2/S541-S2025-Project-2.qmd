@@ -123,7 +123,7 @@ Treatment allocations (n = 10 per treatment) were fixed, while experimental unit
 Blood and fecal samples will be obtained at pre-determined time points surrounding the SET and analyzed by ELISA for biological markers indicating stress and inflammation in response to an exercise challenge.
 
 ## Pilot study and sample size calculations
-From a power analysis based on cortisol values with a true difference of 20,000 pg/mL and a standard deviation of 5419 pg/mL, 3 horses per treatment will be required for a power level of 0.90 and an alpha of 0.05.
+From a power analysis based on PGE2 values with a true difference of 6000 pg/mL and a standard deviation of `r round(sd(HorseDat$PGE2),1)` pg/mL, 2 horses per treatment will be required for a power level of 0.90 and an alpha of 0.05.
 The sample size of n = 10/trt in the present study is sufficient.
 
 ## Data overview
