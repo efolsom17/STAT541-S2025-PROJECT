@@ -505,6 +505,54 @@ R code for fitting models and diagnostic plots.
 #| label: Appendix-RCode
 #| eval: false
 
+HorseDat <- readxl::read_xlsx("Project 2 Data.xlsx") |>
+            mutate(ID = as.factor(ID),
+                    TRT = factor(TRT, levels = c(0, 46, 92),
+                                labels = c("Control", "Low", "High")),
+                    TIME = factor(TIME, ordered = T,
+                                  levels = c("Pre", "0", "1", "6")),
+                    SEX = factor(SEX, levels = c("G", "M"),
+                                labels = c("Gelding", "Filly"))) |>
+            select(-c(...9,...10)) |>
+            drop_na()
+
+# HorseDat |> ggplot(aes(x=TRT, y = Cortisol)) + geom_violin() + geom_jitter()
+
+# HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() + geom_jitter()
+
+# HorseDat |> ggplot(aes(x=TRT, y= IgA)) + geom_violin() + geom_jitter()
+
+# HorseDat |> ggplot(aes(x=TRT, y= SOD)) + geom_violin() + geom_jitter()
+
+p0 <- HorseDat |> ggplot(aes(x=TRT, y= PGE2)) + geom_violin() +
+  geom_jitter() +
+  labs(x = "", y = "Prostaglandin E2")
+p1 <- HorseDat |> ggplot(aes(x=SEX, y= PGE2)) + geom_violin() + 
+  geom_jitter() + labs(x = "", y = "Prostaglandin E2")
+p2 <- HorseDat |> ggplot(aes(x=interaction(SEX, TRT), y= PGE2)) +
+   geom_violin() + geom_jitter(aes(colour = TRT)) +
+  labs(x = "", y = "Prostaglandin E2") +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 15, vjust = 0.01))
+p3 <- HorseDat |> ggplot(aes(x = TIME, y = PGE2)) +
+  labs(x = "Time", y = "Prostaglandin E2") +
+  geom_violin() +
+  geom_jitter()
+p4 <- HorseDat |> ggplot(aes(x = TIME, y = PGE2)) +
+  geom_violin(aes(colour = TRT)) +
+  geom_jitter(aes(colour = TRT)) +
+  facet_wrap(~ TRT) +
+  labs(x = "Time", y = "Prostaglandin E2") +
+  theme(legend.position = "none")
+p5 <- HorseDat |> ggplot(aes(x = TIME, y = PGE2)) +
+  geom_violin() +
+  geom_jitter(aes(colour = TRT)) +
+  facet_wrap(~ SEX) +
+  labs(x = "Time", y = "Prostaglandin E2")
+
+ggarrange(p0, p1, p3, p2, p4, p5, nrow = 3, ncol = 2,
+          labels = c("(A)", "(B)", "(C)", "(D)", "(E)", "(F)"))
+
 # No log Transformation
 
 fit.lm.PGE2 <- lmer(PGE2 ~ TRT + SEX + TIME + (1|ID), data= HorseDat)
