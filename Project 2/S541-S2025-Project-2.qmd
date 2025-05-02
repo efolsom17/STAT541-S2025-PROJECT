@@ -87,7 +87,7 @@ $Y_{ijkht} = \mu + \alpha_i + \beta_j + \gamma_k + T_h + \epsilon_{ijkht}$
 
     Where:
 
-    $Y_{ijkht}$ is the response (cortisol, PGE2, SOD, or fecal IgA)
+    $Y_{ijkht}$ is the response (PGE2)
 
     $\mu$ is a constant
 
