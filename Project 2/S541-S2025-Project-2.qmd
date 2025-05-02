@@ -247,10 +247,10 @@ HorseDat <- HorseDat |> mutate(LogPGE2 = log(PGE2))
 
 fit.lm.PGE2.log <- lmer(LogPGE2 ~ TRT + SEX + TIME + (1|ID), data= HorseDat)
 # summary(fit.lm.PGE2.log) |> kable()
-car::Anova(fit.lm.PGE2.log) |> kable(caption= "Analysis of Deviance Table (Type II Wald Chi-Squared tests)")
+car::Anova(fit.lm.PGE2.log) |> kable(digits = 3,caption= "Analysis of Deviance Table (Type II Wald Chi-Squared tests)")
 emm.log <- emmeans(fit.lm.PGE2.log, specs = "TRT", adjust = "bonferroni")
-pairs(emm.log) |> kable(caption = "Estimated Contrasts: Treatment Effects")
-confint(pairs(emm.log)) |> kable(caption = "Confidence Intervals: Treatment Effects")
+pairs(emm.log) |> kable(digits = 3,caption = "Estimated Contrasts: Treatment Effects")
+confint(pairs(emm.log)) |> kable(digits = 3,caption = "Confidence Intervals: Treatment Effects")
 ```
 
 ```{r}
